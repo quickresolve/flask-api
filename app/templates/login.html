@@ -1,0 +1,20 @@
+extend from layout -->
+{% extends "layout.html" %}
+
+{% block content %}
+  <h1>Sign In</h1>
+  <form action="" method="post" name="login">
+    {{ form.hidden_tag() }}
+    <p>
+      Please enter your OpenID:<br>
+      {{ form.openid(size=80) }}<br>
+    </p>
+    <p>{{ form.remember_me }} Remember Me</p>
+    <p><input type="submit" value="Sign In"></p>
+  </form>
+{% end block %}
+
+
+<!--  This template expects a form object instantiated from the form class we just defined stored in a template argument named form. -->
+
+<!-- The form.hidden_tag() template argument will get replaced with a hidden field that implements the CSRF prevention that we enabled in the configuration. This field needs to be in all your forms if you have CSRF enabled.
