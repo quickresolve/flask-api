@@ -1,5 +1,6 @@
 from flask import *
 from app import app
+from .forms import LoginForm
 
 user = {'name': 'guest'} #fake user
 posts = [  # fake array of posts
