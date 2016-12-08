@@ -1,6 +1,6 @@
 from flask import *
 from app import app
-from .forms import LoginForm
+from .forms import LoginForm, SignupForm
 
 user = {'name': 'guest'} #fake user
 posts = [  # fake array of posts
@@ -23,13 +23,30 @@ def index():
                          user=user,
                          posts=posts)
 
+@app.route('/signup', methods=['GET','POST'])
+def signup():
+  form=SignupForm()
+
+  if request.method == 'POST':
+    if form.validate() == False:
+      print("error")
+      return render_template('signup.html', title='Sign Up', form=form)
+    else:
+      new_user = User(form.first_name.data, form.last_name.data, form.email.data, form.password.data)
+      db.session.add(new_user)
+      db.session.commit()
+      print("sucess")
+      return "Success!"
+
+  elif request.method == "GET":
+    return render_template('signup.html',
+                           title='Sign Up',
+                           form=form)
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
   form = LoginForm()
-  if form.validate_on_submit():
-    flash('Login requested for OpenID="%s", remember_me=%s' %
-          (form.openid.data, str(form.remember_me.data)))
-    return redirect('/index')
   return render_template('login.html',
                           title='Sign In',
                           form=form)

@@ -5,19 +5,15 @@
     {% else %}
     <title>Flask RESTful Blog API</title>
     {% endif %}
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet'>
+    <link href="static/css/main.css" rel="stylesheet" >
   </head>
    <body>
-      <div>Microblog: <a href="/index">Home</a></div>
-      <hr>
-      {% with messages = get_flashes_messages() %}
-        {% for message in messages %}
-          <ul>
-          {% for message in messages %}
-            <li>{{ message }}
-          {% endfor %}
-          </ul>
-          {% endif %}
-      {% endwith %}
+    <header>
+      <div class="container">
+        <h1 class="title">Flask API</h1>
+      </div>
+    </header>
       {% block content %}{% endblock %}
   </body>
 </html>
