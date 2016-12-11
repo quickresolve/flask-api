@@ -1,4 +1,5 @@
 from flask import *
+from models import db, User
 from app import app
 from .forms import LoginForm, SignupForm
 
@@ -15,6 +16,7 @@ posts = [  # fake array of posts
 ]
 
 
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -25,28 +27,34 @@ def index():
 
 @app.route('/signup', methods=['GET','POST'])
 def signup():
-  form=SignupForm()
+  form=SignupForm(request.form)
 
-  if request.method == 'POST':
-    if form.validate() == False:
-      print("error")
-      return render_template('signup.html', title='Sign Up', form=form)
-    else:
+  if request.method == 'POST' and form.validate():
       new_user = User(form.first_name.data, form.last_name.data, form.email.data, form.password.data)
       db.session.add(new_user)
       db.session.commit()
-      print("sucess")
-      return "Success!"
-
-  elif request.method == "GET":
-    return render_template('signup.html',
-                           title='Sign Up',
-                           form=form)
+      session['email'] = new_user.email
+      return redirect(url_for('index'))
+  return render_template('signup.html',
+                          title='Sign Up',
+                          form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
   form = LoginForm()
+
+  if request.method == 'POST':
+    email = form.email.data
+    password = form.password.data
+    user = User.query.filter_by(email=email).first()
+    if user is not None and user.check_password(password):
+      session['email'] = form.email.data
+      return redirect(url_for('index'))
+    else:
+      return "Invalid Login"
+
+
   return render_template('login.html',
                           title='Sign In',
                           form=form)
